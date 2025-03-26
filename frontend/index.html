@@ -128,7 +128,7 @@
             const movieDetails = document.querySelector('.movie-details');
 
             function fetchMovies() {
-                fetch('http://localhost:3000/films')
+                fetch('YOUR_BACKEND_URL/films')
                     .then(response => response.json())
                     .then(movies => {
                         filmsList.innerHTML = '';
@@ -149,7 +149,7 @@
             }
 
             function deleteMovie(movieId) {
-                fetch(`http://localhost:3000/films/${movieId}`, {
+                fetch(`YOUR_BACKEND_URL/films/${movieId}`, {
                     method: 'DELETE'
                 })
                 .then(response => {
@@ -164,7 +164,7 @@
 
             function buyTicket(movieId, currentTicketsSold, capacity, films) {
                 if (currentTicketsSold < capacity) {
-                    fetch(`http://localhost:3000/films/${movieId}`)
+                    fetch(`YOUR_BACKEND_URL/films/${movieId}`)
                         .then(response => response.json())
                         .then(movie => {
                             const newTicket = {
@@ -175,7 +175,7 @@
                                 price: 10
                             };
 
-                            fetch('http://localhost:3000/tickets', {
+                            fetch('YOUR_BACKEND_URL/tickets', {
                                 method: 'POST',
                                 headers: {
                                     'Content-Type': 'application/json'
@@ -184,7 +184,7 @@
                             })
                             .then(response => response.json())
                             .then(() => {
-                                return fetch(`http://localhost:3000/films/${movieId}`, {
+                                return fetch(`YOUR_BACKEND_URL/films/${movieId}`, {
                                     method: 'PATCH',
                                     headers: {
                                         'Content-Type': 'application/json'
@@ -233,7 +233,7 @@
             }
 
             function fetchTickets() {
-                fetch('http://localhost:3000/tickets')
+                fetch('YOUR_BACKEND_URL/tickets')
                     .then(response => response.json())
                     .then(tickets => {
                         const ticketsList = document.querySelector('.tickets-list ul');
