@@ -8,6 +8,13 @@
       margin: 0;
       background-color: #f0f0f0;
     }
+    nav{
+        background-color: rgb(37, 37, 37);
+        color:rgb(22, 22, 72);
+    }
+    nav p{
+        color:white;
+    }
 
     .container {
       display: flex;
@@ -84,6 +91,10 @@
   </style>
 </head>
 <body>
+    <nav> 
+        <h1>FLATDANGO</h1>
+        <p>BUY MOVIE TICKETS</p>
+    </nav>
 
   <div class="container">
     <div class="movie-list">
@@ -97,12 +108,13 @@
         <li>THE SKYDIVERS</li>
         <li>THE KILLER SHREWS</li>
         <li>PROJECT MOON BASE</li>
+        <li></li>
       </ul>
     </div>
 
     <div class="movie-details">
       <div class="movie-image">
-        <img src="./Giant_Gila_Monster_poster.jpg" alt="The Giant Gila Monster">
+        <img src="Giant_Gila_Monster_poster.jpg" alt="The Giant Gila Monster">
       </div>
       <div class="movie-info">
         <h2>The Giant Gila Monster</h2>
@@ -116,11 +128,12 @@
       </div>
     </div>
   </div>
-  <script>document.addEventListener('DOMContentLoaded', () => {
+  <script >
+        document.addEventListener('DOMContentLoaded', () => {
     const filmsList = document.querySelector('.movie-list ul');
     const movieDetails = document.querySelector('.movie-details');
 
-    // Function to fetch and display movie list
+    // Function to fetch 
     function fetchMovies() {
         fetch('https://flatadango-lvd9.onrender.com/films')
             .then(response => response.json())
@@ -129,14 +142,12 @@
                 movies.forEach(movie => {
                     const listItem = document.createElement('li');
                     listItem.textContent = movie.title;
-
                     const deleteButton = document.createElement('button');
                     deleteButton.textContent = 'x';
                     deleteButton.addEventListener('click', (event) => {
-                        event.stopPropagation(); // Prevent movie details from showing when delete is clicked.
+                        event.stopPropagation();// Prevent movie details from showing when delete is clicked.
                         deleteMovie(movie.id);
-                    });
-
+                   });
                     listItem.appendChild(deleteButton);
                     filmsList.appendChild(listItem);
 
@@ -144,6 +155,21 @@
                 });
             });
     }
+    function deleteMovie(movieId) {
+    fetch(`https://flatadango-lvd9.onrender.com/films/${movieId}`, { method: 'DELETE' })
+        .then(response => {
+            if (response.ok) {
+                console.log('Movie deleted successfully');
+                fetchMovies(); // Refresh movie list
+                movieDetails.innerHTML = ''; // Clear movie details if deleted
+            } else {
+                console.error('Failed to delete movie:', response.status, response.statusText);
+            }
+        })
+        .catch(error => {
+            console.error('Error deleting movie:', error);
+        });
+}
 
     // Function to fetch and display details of a specific movie
     function fetchMovieDetails(movieId) {
@@ -199,25 +225,9 @@
         }
     }
 
-    // Function to delete a movie
-    function deleteMovie(movieId) {
-    fetch(`https://flatadango-lvd9.onrender.com/films/${movieId}`, { method: 'DELETE' })
-        .then(response => {
-            if (response.ok) {
-                fetchMovies(); // Refresh movie list
-                movieDetails.innerHTML = ''; // Clear movie details if deleted
-            } else {
-                console.error('Failed to delete movie:', response.status);
-            }
-        })
-        .catch(error => {
-            console.error('Error deleting movie:', error);
-        });
-}          });
-    
-
     fetchMovies();
-    fetchMovieDetails(1); // Load details of the first movie on page load</script>
-
+    fetchMovieDetails(1); // Load details of the first movie on page load
+});
+  </script>
 </body>
 </html>
