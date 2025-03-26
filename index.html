@@ -136,7 +136,7 @@
     // Function to fetch 
     function fetchMovies() {
       
-        fetch('https://raw.githubusercontent.com/dorothy-22/Flatadango/main/db.json')
+        fetch('http://localhost:3000/films')
             .then(response => response.json())
             .then(movies => {
                 filmsList.innerHTML = ''; // Clear placeholder or existing list
