@@ -194,51 +194,37 @@
             }
 
             function fetchMovieDetails(movieId, films) {
-                const movie = films.find(film => film.id === movieId);
-                if (movie) {
-                    const availableTickets = movie.capacity - movie.tickets_sold;
-                    movieDetails.innerHTML = `
-                        <div class="movie-image">
-                            <img src="<span class="math-inline">\{movie\.poster\}" alt\="</span>{movie.title}">
-                        </div>
-                        <div class="movie-info">
-                            <h2><span class="math-inline">\{movie\.title\}</h2\>
-<p\></span>{movie.runtime} minutes</p>
-                            <p><span class="math-inline">\{movie\.description\}</p\>
-<div class\="ticket\-info"\>
-<span class\="showtime"\></span>{movie.showtime}</span>
-                                <span class="tickets-left"><span class="math-inline">\{availableTickets\} remaining tickets</span\>
-</div\>
-<button class\="buy\-ticket"\></span>{availableTickets > 0 ? 'Buy Ticket' : 'Sold Out'}</button>
-                        </div>
-                    `;
-                    const buyButton = movieDetails.querySelector('.buy-ticket');
-                    if (availableTickets > 0) {
-                        buyButton.addEventListener('click', () => buyTicket(movie.id, movie.tickets_sold, movie.capacity, films));
-                    } else {
-                        buyButton.textContent = 'Sold Out';
-                        buyButton.disabled = true;
-                    }
-                }
-            }
+    const movie = films.find(film => film.id === movieId);
+    console.log(movie); // Check the movie object
 
-            function fetchTickets() {
-                fetch('https://flatadango-lvd9.onrender.com/tickets')
-                    .then(response => response.json())
-                    .then(tickets => {
-                        const ticketsList = document.querySelector('.tickets-list ul');
-                        ticketsList.innerHTML = '';
-                        tickets.forEach(ticket => {
-                            const listItem = document.createElement('li');
-                            listItem.textContent = `Movie: ${ticket.movie_title}, Showtime: ${ticket.showtime}, Price: $${ticket.price}`;
-                            ticketsList.appendChild(listItem);
-                        });
-                    })
-                    .catch(error => console.error('Error fetching tickets:', error));
-            }
-
-            fetchMovies();
-            fetchMovieDetails("2", []);
+    if (movie) {
+        const availableTickets = movie.capacity - movie.tickets_sold;
+        movieDetails.innerHTML = `
+            <div class="movie-image">
+                <img src="${movie.poster}" alt="${movie.title}">
+            </div>
+            <div class="movie-info">
+                <h2>${movie.title}</h2>
+                <p>${movie.runtime} minutes</p>
+                <p>${movie.description}</p>
+                <div class="ticket-info">
+                    <span class="showtime">${movie.showtime}</span>
+                    <span class="tickets-left">${availableTickets} remaining tickets</span>
+                </div>
+                <button class="buy-ticket">${availableTickets > 0 ? 'Buy Ticket' : 'Sold Out'}</button>
+            </div>
+        `;
+        const buyButton = movieDetails.querySelector('.buy-ticket');
+        if (availableTickets > 0) {
+            buyButton.addEventListener('click', () => buyTicket(movie.id, movie.tickets_sold, movie.capacity, films));
+        } else {
+            buyButton.textContent = 'Sold Out';
+            buyButton.disabled = true;
+        }
+    } else {
+        movieDetails.innerHTML = '<p>Movie not found.</p>';
+    }
+}            fetchMovieDetails("2", []);
             fetchTickets();
         });
     </script>
