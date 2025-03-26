@@ -3,92 +3,94 @@
 <head>
     <title>Movie Tickets</title>
     <style>
-      body {
-      font-family: sans-serif;
-      margin: 0;
-      background-color: #f0f0f0;
-    }
-    nav{
-        background-color: rgb(37, 37, 37);
-        color:rgb(22, 22, 72);
-    }
-    nav p{
-        color:white;
-    }
+        body {
+            font-family: sans-serif;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        nav{
+            background-color: rgb(37, 37, 37);
+            color:rgb(22, 22, 72);
+        }
+        nav p{
+            color:white;
+        }
 
-    .container {
-      display: flex;
-      justify-content: space-around;
-      padding: 20px;
-    }
+        .container {
+            display: flex;
+            justify-content: space-around;
+            padding: 20px;
+        }
 
-    .movie-list {
-      width: 30%;
-    }
+        .movie-list {
+            width: 30%;
+        }
 
-    .movie-list ul {
-      list-style: none;
-      padding: 0;
-    }
+        .movie-list ul {
+            list-style: none;
+            padding: 0;
+        }
 
-    .movie-list li {
-      padding: 10px;
-      border-bottom: 1px solid #ddd;
-      cursor: pointer;
-    }
+        .movie-list li {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+            cursor: pointer;
+        }
 
-    .movie-list li:hover {
-      background-color: #e0e0e0;
-    }
+        .movie-list li:hover {
+            background-color: #e0e0e0;
+        }
 
-    .movie-details {
-      width: 60%;
-      display: flex;
-      background-color: white;
-      border-radius: 8px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    }
+        .movie-details {
+            width: 60%;
+            display: flex;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
 
-    .movie-image {
-      width: 40%;
-    }
+        .movie-image {
+            width: 40%;
+        }
 
-    .movie-image img {
-      width: 100%;
-      height: auto;
-      border-radius: 8px 0 0 8px;
-    }
+        .movie-image img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px 0 0 8px;
+        }
 
-    .movie-info {
-      width: 60%;
-      padding: 20px;
-    }
+        .movie-info {
+            width: 60%;
+            padding: 20px;
+        }
 
-    .movie-info h2 {
-      margin-top: 0;
-    }
+        .movie-info h2 {
+            margin-top: 0;
+        }
 
-    .ticket-info {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 20px;
-    }
+        .ticket-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
 
-    .buy-ticket {
-      background-color: #ff5722;
-      color: white;
-      padding: 10px 15px;
-      border: none;
-      border-radius: 5px;
-      font-size: 1em;
-      cursor: pointer;
-      width: 100%;
-    }
+        .buy-ticket {
+            background-color: #ff5722;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1em;
+            cursor: pointer;
+            width: 100%;
+        }
 
-    .buy-ticket:hover {
-      background-color: #e64a19;
-    }
-    
+        .buy-ticket:hover {
+            background-color: #e64a19;
+        }
+        .sold-out{
+            color:red;
+        }
     </style>
 </head>
 <body>
@@ -101,20 +103,7 @@
             <ul></ul>
         </div>
         <div class="movie-details">
-            <div class="movie-image">
-                <img src="Giant_Gila_Monster_poster.jpg" alt="The Giant Gila Monster">
             </div>
-            <div class="movie-info">
-                <h2>The Giant Gila Monster</h2>
-                <p>108 minutes</p>
-                <p>A giant lizard terrorizes a rural Texas community and a heroic teenager attempts to destroy the creature.</p>
-                <div class="ticket-info">
-                    <span class="showtime">04:00 PM</span>
-                    <span class="tickets-left">3 remaining tickets</span>
-                </div>
-                <button class="buy-ticket">Buy Ticket</button>
-            </div>
-        </div>
     </div>
 
     <div class="tickets-list">
@@ -132,9 +121,10 @@
                     .then(response => response.json())
                     .then(movies => {
                         filmsList.innerHTML = '';
-                        movies.films.forEach(movie => {
+                        movies.forEach(movie => {
                             const listItem = document.createElement('li');
                             listItem.textContent = movie.title;
+                            listItem.classList.add('film', 'item');
                             const deleteButton = document.createElement('button');
                             deleteButton.textContent = 'x';
                             deleteButton.addEventListener('click', (event) => {
@@ -143,8 +133,9 @@
                             });
                             listItem.appendChild(deleteButton);
                             filmsList.appendChild(listItem);
-                            listItem.addEventListener('click', () => fetchMovieDetails(movie.id, movies.films));
+                            listItem.addEventListener('click', () => fetchMovieDetails(movie.id, movies));
                         });
+                        fetchMovieDetails(movies[0].id, movies); // Load first movie details
                     });
             }
 
@@ -182,7 +173,6 @@
                                 },
                                 body: JSON.stringify(newTicket)
                             })
-                            .then(response => response.json())
                             .then(() => {
                                 return fetch(`https://flatadango-lvd9.onrender.com/films/${movieId}`, {
                                     method: 'PATCH',
@@ -196,7 +186,7 @@
                             .then(() => {
                                 fetchMovieDetails(movieId, films);
                                 fetchMovies();
-                                fetchTickets(); // Refresh tickets list
+                                fetchTickets();
                             })
                             .catch(error => console.error('Error buying ticket:', error));
                         });
@@ -209,17 +199,17 @@
                     const availableTickets = movie.capacity - movie.tickets_sold;
                     movieDetails.innerHTML = `
                         <div class="movie-image">
-                            <img src="${movie.poster}" alt="${movie.title}">
+                            <img src="<span class="math-inline">\{movie\.poster\}" alt\="</span>{movie.title}">
                         </div>
                         <div class="movie-info">
-                            <h2>${movie.title}</h2>
-                            <p>${movie.runtime} minutes</p>
-                            <p>${movie.description}</p>
-                            <div class="ticket-info">
-                                <span class="showtime">${movie.showtime}</span>
-                                <span class="tickets-left">${availableTickets} remaining tickets</span>
-                            </div>
-                            <button class="buy-ticket">${availableTickets > 0 ? 'Buy Ticket' : 'Sold Out'}</button>
+                            <h2><span class="math-inline">\{movie\.title\}</h2\>
+<p\></span>{movie.runtime} minutes</p>
+                            <p><span class="math-inline">\{movie\.description\}</p\>
+<div class\="ticket\-info"\>
+<span class\="showtime"\></span>{movie.showtime}</span>
+                                <span class="tickets-left"><span class="math-inline">\{availableTickets\} remaining tickets</span\>
+</div\>
+<button class\="buy\-ticket"\></span>{availableTickets > 0 ? 'Buy Ticket' : 'Sold Out'}</button>
                         </div>
                     `;
                     const buyButton = movieDetails.querySelector('.buy-ticket');
