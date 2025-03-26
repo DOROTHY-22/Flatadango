@@ -128,7 +128,7 @@
             const movieDetails = document.querySelector('.movie-details');
 
             function fetchMovies() {
-                fetch('YOUR_BACKEND_URL/films')
+                fetch('https://flatadango-lvd9.onrender.com/films')
                     .then(response => response.json())
                     .then(movies => {
                         filmsList.innerHTML = '';
@@ -149,7 +149,7 @@
             }
 
             function deleteMovie(movieId) {
-                fetch(`YOUR_BACKEND_URL/films/${movieId}`, {
+                fetch(`https://flatadango-lvd9.onrender.com/films/${movieId}`, {
                     method: 'DELETE'
                 })
                 .then(response => {
@@ -164,7 +164,7 @@
 
             function buyTicket(movieId, currentTicketsSold, capacity, films) {
                 if (currentTicketsSold < capacity) {
-                    fetch(`YOUR_BACKEND_URL/films/${movieId}`)
+                    fetch(`https://flatadango-lvd9.onrender.com/films/${movieId}`)
                         .then(response => response.json())
                         .then(movie => {
                             const newTicket = {
@@ -175,7 +175,7 @@
                                 price: 10
                             };
 
-                            fetch('YOUR_BACKEND_URL/tickets', {
+                            fetch('https://flatadango-lvd9.onrender.com/tickets', {
                                 method: 'POST',
                                 headers: {
                                     'Content-Type': 'application/json'
@@ -184,7 +184,7 @@
                             })
                             .then(response => response.json())
                             .then(() => {
-                                return fetch(`YOUR_BACKEND_URL/films/${movieId}`, {
+                                return fetch(`https://flatadango-lvd9.onrender.com/films/${movieId}`, {
                                     method: 'PATCH',
                                     headers: {
                                         'Content-Type': 'application/json'
@@ -233,7 +233,7 @@
             }
 
             function fetchTickets() {
-                fetch('YOUR_BACKEND_URL/tickets')
+                fetch('https://flatadango-lvd9.onrender.com/tickets')
                     .then(response => response.json())
                     .then(tickets => {
                         const ticketsList = document.querySelector('.tickets-list ul');
